@@ -2,10 +2,15 @@ import AppKit
 import SwiftUI
 import Combine
 
-/// NSHostingView в non-activating панели: окно никогда не key, каждый клик — «первый».
-/// Без acceptsFirstMouse=true SwiftUI-жесты глотаются.
-final class FirstMouseHostingView<Content: View>: NSHostingView<Content> {
+/// Прозрачный AppKit-ловец клика ПОВЕРХ SwiftUI-бара.
+/// Окно панели non-activating (никогда не key), поэтому клик по нему — всегда «первый»,
+/// а SwiftUI onTapGesture его теряет (первый клик активирует окно, а не доходит до вью).
+/// Этот NSView сам — верхний hit-target: acceptsFirstMouse=true + прямой mouseDown.
+final class ClickCatcherView: NSView {
+    var onClick: () -> Void = {}
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+    override func mouseDown(with event: NSEvent) { onClick() }
+    override func hitTest(_ point: NSPoint) -> NSView? { self } // забираем все клики
 }
 
 /// Бар у выреза: вплотную к верхнему краю экрана, чёрный, сливается с чёлкой.
@@ -13,14 +18,15 @@ final class FirstMouseHostingView<Content: View>: NSHostingView<Content> {
 @MainActor
 final class OverlayPanelController {
     private let panel: NSPanel
-    private let hosting: FirstMouseHostingView<OverlayView>
+    private let hosting: NSHostingView<OverlayView>
+    private let clickCatcher = ClickCatcherView()
     private let monitor: FocusMonitor
     private var cancellables = Set<AnyCancellable>()
 
     init(monitor: FocusMonitor) {
         self.monitor = monitor
 
-        hosting = FirstMouseHostingView(rootView: OverlayView(monitor: monitor, layout: NotchLayout(
+        hosting = NSHostingView(rootView: OverlayView(monitor: monitor, layout: NotchLayout(
             hasNotch: false, notchWidth: 0, barHeight: 32, leftWidth: 160, rightWidth: 70
         )))
 
@@ -39,7 +45,25 @@ final class OverlayPanelController {
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
         panel.becomesKeyOnlyIfNeeded = true
-        panel.contentView = hosting
+
+        let container = NSView()
+        hosting.translatesAutoresizingMaskIntoConstraints = false
+        clickCatcher.translatesAutoresizingMaskIntoConstraints = false
+        clickCatcher.onClick = { AppModel.shared.openFocusTask() }
+        clickCatcher.toolTip = "Открыть задачу в TickTick"
+        container.addSubview(hosting)
+        container.addSubview(clickCatcher) // поверх бара
+        NSLayoutConstraint.activate([
+            hosting.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            hosting.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            hosting.topAnchor.constraint(equalTo: container.topAnchor),
+            hosting.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            clickCatcher.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            clickCatcher.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            clickCatcher.topAnchor.constraint(equalTo: container.topAnchor),
+            clickCatcher.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        panel.contentView = container
 
         Publishers.CombineLatest(monitor.$session, monitor.$overlayEnabled)
             .receive(on: RunLoop.main)

@@ -62,11 +62,7 @@ private struct NotchBarView: View {
                     .fill(Color.black)
             )
         }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            AppModel.shared.openFocusSticky()
-        }
-        .help("Открыть заметку задачи")
+        // Клик перехватывает ClickCatcherView поверх бара (см. OverlayPanel.swift).
     }
 
     private var stateColor: Color {

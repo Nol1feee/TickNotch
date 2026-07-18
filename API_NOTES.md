@@ -107,26 +107,30 @@ POST https://ms.ticktick.com/focus/batch/focusOp
 Выводы: даты — ISO `+0000`, `duration` записей — **миллисекунды**, привязка к задаче —
 массив `tasks[]` с `title`.
 
-## Deep-link в приложение TickTick (клик по бару)
+## Открыть задачу в приложении TickTick (клик по бару)
 
-TickTick.app (`com.TickTick.task.mac`, native AppKit) регистрирует схемы
-`ticktick`, `dida`, `com.ticktick.task`. Роутер — библиотека Crossroad, маршруты
-строятся в рантайме (полных шаблонов в бинарнике нет). Проверено эмпирически:
+**Что РАБОТАЕТ (проверено скриншотом — деталь задачи раскрылась):**
 
 ```
-open -g "ticktick://ticktick.com/p/{projectId}/tasks/{taskId}"
+open -a TickTick "https://ticktick.com/webapp/#q/all/tasks/{taskId}"
 ```
 
-- открывает **родное окно задачи** (деталь в layout'е `popup`/`side_peek` по настройке
-  пользователя — строки `task_detail_layout_popup/side_peek`), плавающее **поверх всех окон,
-  включая fullscreen другого приложения** (проверено скриншотом над полноэкранным TextEdit);
-- `-g` / `NSWorkspace.OpenConfiguration.activates=false` — TickTick не выходит на передний план;
-- **нужен `projectId` в пути**: форма `.../tasks/{taskId}` без проекта только переключает доску,
-  окно не открывает. `projectId` берём из `GET /api/v2/task/{taskId}`.
+Форсируем приложение открыть его же веб-URL задачи — TickTick перехватывает,
+переключается на задачу и **раскрывает панель детали** (редактируемую, с чеклистом).
+Маршрут `#q/all/…` **проектонезависимый** — `projectId` НЕ нужен, клик без сети, мгновенный.
+Форма с проектом `#p/{projectId}/tasks/{taskId}` тоже работает.
+Swift: `NSWorkspace.open([url], withApplicationAt: tickTickAppURL, configuration:)` с `activates=true`.
 
-Прочие маршруты схемы (из строк бинарника): `/tasks/`, `/focus`, `/matrix`, `/create`.
-Отдельного `/sticky` маршрута нет — «Open as sticky note» это приватное UI-действие
-(`bottomActionViewDidClickOpenSticky:`), внешне не вызывается кроме как через Accessibility (хрупко).
+**Что НЕ работает (важно, чтобы не наступить снова):**
+
+- Кастомная схема `ticktick://ticktick.com/p/{pid}/tasks/{id}` и `ticktick://tasks/{id}`
+  задачу **не открывают** — только активируют приложение (остаётся текущий экран).
+  Роутер Crossroad; маршруты `/tasks/`, `/focus`, `/matrix`, `/create` есть, но детали задачи
+  извне не раскрывают.
+- ⚠️ Ранее ошибочно засчитал «родную стики над fullscreen» за результат deep-link'а —
+  на деле всплывала **ранее закреплённая** пользователем стики той задачи при активации
+  приложения, а не следствие ссылки. Стики (`open_as_sticky_note`) внешне не вызывается
+  (приватное UI-действие `bottomActionViewDidClickOpenSticky:`, только через Accessibility — хрупко).
 
 Бонус: TickTick.app **скриптуется** (`NSAppleScriptEnabled=true`, `TickTick.sdef` — команды
 `search tasks`, `today tasks`, `start pomo`, `toggle task`, всё возвращает JSON) — запасной путь

@@ -19,7 +19,6 @@ struct TickTickClient {
     }
 
     private static let endpoint = URL(string: "https://ms.ticktick.com/focus/batch/focusOp")!
-    private static let taskBase = "https://api.ticktick.com/api/v2/task/"
 
     private static let userAgent =
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
@@ -69,24 +68,6 @@ struct TickTickClient {
             point: dict["point"] as? Int,
             rawJSON: pretty
         )
-    }
-
-    /// GET /api/v2/task/{id} — полная карточка задачи (проверено живым запросом).
-    func fetchTask(id: String) async throws -> TaskDetail {
-        guard let url = URL(string: Self.taskBase + id) else { throw ClientError.badPayload }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 8 // клик не должен висеть
-        applyHeaders(&request)
-
-        let (data, response) = try await Self.session.data(for: request)
-        guard let http = response as? HTTPURLResponse else { throw ClientError.badPayload }
-        if http.statusCode == 401 || http.statusCode == 403 { throw ClientError.unauthorized }
-        guard (200..<300).contains(http.statusCode) else { throw ClientError.http(http.statusCode) }
-        guard let object = try? JSONSerialization.jsonObject(with: data),
-              let dict = object as? [String: Any]
-        else { throw ClientError.badPayload }
-        return TaskDetail(dict)
     }
 
     private func applyHeaders(_ request: inout URLRequest) {

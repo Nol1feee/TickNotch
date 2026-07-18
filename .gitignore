@@ -1,0 +1,11 @@
+# Сборка
+build/
+DerivedData/
+*.xcuserstate
+
+# macOS
+.DS_Store
+
+# Xcode user data
+xcuserdata/
+*.xcworkspace/xcuserdata/

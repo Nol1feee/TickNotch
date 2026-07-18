@@ -1,0 +1,294 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000000000000000000BF01 /* TickNotchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE01 /* TickNotchApp.swift */; };
+		AA000000000000000000BF02 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE02 /* AppModel.swift */; };
+		AA000000000000000000BF03 /* FocusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE03 /* FocusMonitor.swift */; };
+		AA000000000000000000BF04 /* FocusModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE04 /* FocusModels.swift */; };
+		AA000000000000000000BF05 /* TickTickClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE05 /* TickTickClient.swift */; };
+		AA000000000000000000BF06 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE06 /* KeychainStore.swift */; };
+		AA000000000000000000BF07 /* OverlayPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE07 /* OverlayPanel.swift */; };
+		AA000000000000000000BF08 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE08 /* OverlayView.swift */; };
+		AA000000000000000000BF09 /* CookieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE09 /* CookieView.swift */; };
+		AA000000000000000000BF0A /* TaskModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE0D /* TaskModels.swift */; };
+		AA000000000000000000BF0B /* TaskCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE0E /* TaskCardView.swift */; };
+		AA000000000000000000BF0C /* TaskCardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE0F /* TaskCardPanel.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000000000000000000FE01 /* TickNotchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickNotchApp.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE02 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE03 /* FocusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusMonitor.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE04 /* FocusModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusModels.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE05 /* TickTickClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickTickClient.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE06 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE07 /* OverlayPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanel.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE08 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE09 /* CookieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieView.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE0D /* TaskModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskModels.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE0E /* TaskCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardView.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE0F /* TaskCardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCardPanel.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000000000000000000FE0C /* TickNotch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TickNotch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA0000000000000000000102 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA0000000000000000000301 = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000302 /* TickNotch */,
+				AA0000000000000000000303 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000302 /* TickNotch */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FE01 /* TickNotchApp.swift */,
+				AA000000000000000000FE02 /* AppModel.swift */,
+				AA000000000000000000FE03 /* FocusMonitor.swift */,
+				AA000000000000000000FE04 /* FocusModels.swift */,
+				AA000000000000000000FE05 /* TickTickClient.swift */,
+				AA000000000000000000FE06 /* KeychainStore.swift */,
+				AA000000000000000000FE07 /* OverlayPanel.swift */,
+				AA000000000000000000FE08 /* OverlayView.swift */,
+				AA000000000000000000FE09 /* CookieView.swift */,
+				AA000000000000000000FE0D /* TaskModels.swift */,
+				AA000000000000000000FE0E /* TaskCardView.swift */,
+				AA000000000000000000FE0F /* TaskCardPanel.swift */,
+				AA000000000000000000FE0A /* Info.plist */,
+			);
+			path = TickNotch;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000303 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000FE0C /* TickNotch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA0000000000000000000201 /* TickNotch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000000000000000000502 /* Build configuration list for PBXNativeTarget "TickNotch" */;
+			buildPhases = (
+				AA0000000000000000000101 /* Sources */,
+				AA0000000000000000000102 /* Frameworks */,
+				AA0000000000000000000103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TickNotch;
+			productName = TickNotch;
+			productReference = AA000000000000000000FE0C /* TickNotch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA0000000000000000000202 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AA0000000000000000000201 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA0000000000000000000501 /* Build configuration list for PBXProject "TickNotch" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA0000000000000000000301;
+			productRefGroup = AA0000000000000000000303 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA0000000000000000000201 /* TickNotch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA0000000000000000000103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA0000000000000000000101 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000000000000000000BF01 /* TickNotchApp.swift in Sources */,
+				AA000000000000000000BF02 /* AppModel.swift in Sources */,
+				AA000000000000000000BF03 /* FocusMonitor.swift in Sources */,
+				AA000000000000000000BF04 /* FocusModels.swift in Sources */,
+				AA000000000000000000BF05 /* TickTickClient.swift in Sources */,
+				AA000000000000000000BF06 /* KeychainStore.swift in Sources */,
+				AA000000000000000000BF07 /* OverlayPanel.swift in Sources */,
+				AA000000000000000000BF08 /* OverlayView.swift in Sources */,
+				AA000000000000000000BF09 /* CookieView.swift in Sources */,
+				AA000000000000000000BF0A /* TaskModels.swift in Sources */,
+				AA000000000000000000BF0B /* TaskCardView.swift in Sources */,
+				AA000000000000000000BF0C /* TaskCardPanel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA0000000000000000000401 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA0000000000000000000402 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		AA0000000000000000000403 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TickNotch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vrazdobudko.ticknotch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA0000000000000000000404 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TickNotch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vrazdobudko.ticknotch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA0000000000000000000501 /* Build configuration list for PBXProject "TickNotch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000401 /* Debug */,
+				AA0000000000000000000402 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000000000000000000502 /* Build configuration list for PBXNativeTarget "TickNotch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA0000000000000000000403 /* Debug */,
+				AA0000000000000000000404 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA0000000000000000000202 /* Project object */;
+}

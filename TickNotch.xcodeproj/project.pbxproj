@@ -12,7 +12,7 @@
 		AA000000000000000000BF03 /* FocusMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE03 /* FocusMonitor.swift */; };
 		AA000000000000000000BF04 /* FocusModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE04 /* FocusModels.swift */; };
 		AA000000000000000000BF05 /* TickTickClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE05 /* TickTickClient.swift */; };
-		AA000000000000000000BF06 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE06 /* KeychainStore.swift */; };
+		AA000000000000000000BF06 /* CookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE06 /* CookieStore.swift */; };
 		AA000000000000000000BF07 /* OverlayPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE07 /* OverlayPanel.swift */; };
 		AA000000000000000000BF08 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE08 /* OverlayView.swift */; };
 		AA000000000000000000BF09 /* CookieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE09 /* CookieView.swift */; };
@@ -24,7 +24,7 @@
 		AA000000000000000000FE03 /* FocusMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusMonitor.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE04 /* FocusModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusModels.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE05 /* TickTickClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickTickClient.swift; sourceTree = "<group>"; };
-		AA000000000000000000FE06 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE06 /* CookieStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieStore.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE07 /* OverlayPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanel.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE08 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE09 /* CookieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieView.swift; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 				AA000000000000000000FE03 /* FocusMonitor.swift */,
 				AA000000000000000000FE04 /* FocusModels.swift */,
 				AA000000000000000000FE05 /* TickTickClient.swift */,
-				AA000000000000000000FE06 /* KeychainStore.swift */,
+				AA000000000000000000FE06 /* CookieStore.swift */,
 				AA000000000000000000FE07 /* OverlayPanel.swift */,
 				AA000000000000000000FE08 /* OverlayView.swift */,
 				AA000000000000000000FE09 /* CookieView.swift */,
@@ -149,7 +149,7 @@
 				AA000000000000000000BF03 /* FocusMonitor.swift in Sources */,
 				AA000000000000000000BF04 /* FocusModels.swift in Sources */,
 				AA000000000000000000BF05 /* TickTickClient.swift in Sources */,
-				AA000000000000000000BF06 /* KeychainStore.swift in Sources */,
+				AA000000000000000000BF06 /* CookieStore.swift in Sources */,
 				AA000000000000000000BF07 /* OverlayPanel.swift in Sources */,
 				AA000000000000000000BF08 /* OverlayView.swift in Sources */,
 				AA000000000000000000BF09 /* CookieView.swift in Sources */,

@@ -67,7 +67,7 @@ final class FocusMonitor: ObservableObject {
     }
 
     private func poll() async {
-        guard let cookie = KeychainStore.load() else {
+        guard let cookie = CookieStore.load() else {
             status = .noCookie
             session = nil
             return

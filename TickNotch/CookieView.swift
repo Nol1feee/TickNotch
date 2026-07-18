@@ -23,7 +23,7 @@ final class CookieWindowController: NSWindowController {
 struct CookieView: View {
     let model: AppModel
 
-    @State private var cookie: String = KeychainStore.load() ?? ""
+    @State private var cookie: String = CookieStore.load() ?? ""
     @State private var result: String?
     @State private var testing = false
 
@@ -60,7 +60,7 @@ struct CookieView: View {
 
     private func saveAndTest() {
         let value = cookie.trimmingCharacters(in: .whitespacesAndNewlines)
-        KeychainStore.save(value)
+        CookieStore.save(value)
         testing = true
         result = "Проверяю…"
         Task {

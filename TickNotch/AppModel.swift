@@ -21,7 +21,7 @@ final class AppModel: ObservableObject {
         panelController = OverlayPanelController(monitor: monitor)
         refreshLaunchAtLogin()
         monitor.start()
-        if KeychainStore.load() == nil {
+        if CookieStore.load() == nil {
             showCookieWindow()
         }
     }

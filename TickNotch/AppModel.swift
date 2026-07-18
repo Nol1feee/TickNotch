@@ -14,8 +14,14 @@ final class AppModel: ObservableObject {
     private var panelController: OverlayPanelController?
     private var cookieWindowController: CookieWindowController?
     private var stickyTask: Task<Void, Never>?
-    /// taskId → projectId (deep-link стики требует projectId в пути).
-    private var projectIdCache: [String: String] = [:]
+    private var prefetchTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
+
+    /// taskId → projectId (deep-link требует projectId в пути). Живёт в UserDefaults,
+    /// чтобы клик был мгновенным и после перезапуска.
+    private static let cacheKey = "TickNotchProjectIdCache"
+    private var projectIdCache: [String: String] =
+        UserDefaults.standard.dictionary(forKey: AppModel.cacheKey) as? [String: String] ?? [:]
 
     private init() {}
 
@@ -23,15 +29,44 @@ final class AppModel: ObservableObject {
         panelController = OverlayPanelController(monitor: monitor)
         refreshLaunchAtLogin()
         monitor.start()
+
+        // Префетч projectId сразу при появлении задачи фокуса — клик по бару
+        // не должен ходить в сеть.
+        monitor.$session
+            .receive(on: RunLoop.main)
+            .compactMap { $0?.taskId }
+            .removeDuplicates()
+            .sink { [weak self] taskId in
+                self?.prefetchProjectId(taskId: taskId)
+            }
+            .store(in: &cancellables)
+
         if KeychainStore.load() == nil {
             showCookieWindow()
         }
     }
 
-    // MARK: - Родная стики-заметка задачи
+    // MARK: - Родное окно задачи
 
-    /// Клик по бару: открыть встроенную стики-заметку TickTick для задачи фокуса,
-    /// плавающую поверх окон, БЕЗ вывода приложения на передний план.
+    private func prefetchProjectId(taskId: String) {
+        guard !taskId.isEmpty, projectIdCache[taskId] == nil else { return }
+        prefetchTask?.cancel()
+        prefetchTask = Task { [weak self] in
+            guard let self, let cookie = KeychainStore.load() else { return }
+            guard let detail = try? await TickTickClient(cookie: cookie).fetchTask(id: taskId),
+                  !detail.projectId.isEmpty else { return }
+            storeProjectId(detail.projectId, for: taskId)
+        }
+    }
+
+    private func storeProjectId(_ projectId: String, for taskId: String) {
+        projectIdCache[taskId] = projectId
+        if projectIdCache.count > 200 { projectIdCache = [taskId: projectId] }
+        UserDefaults.standard.set(projectIdCache, forKey: Self.cacheKey)
+    }
+
+    /// Клик по бару: открыть родное окно задачи TickTick, плавающее поверх окон,
+    /// БЕЗ вывода приложения на передний план. projectId обычно уже в кэше (префетч).
     func openFocusSticky() {
         guard let session = monitor.session,
               let taskId = session.taskId, !taskId.isEmpty else {
@@ -42,6 +77,7 @@ final class AppModel: ObservableObject {
             openSticky(projectId: projectId, taskId: taskId)
             return
         }
+        // Кэш промахнулся (клик раньше префетча) — короткая догрузка и открытие.
         stickyTask?.cancel()
         stickyTask = Task { [weak self] in
             guard let self, let cookie = KeychainStore.load() else {
@@ -54,7 +90,7 @@ final class AppModel: ObservableObject {
                 if detail.projectId.isEmpty {
                     openTickTick()
                 } else {
-                    projectIdCache[taskId] = detail.projectId
+                    storeProjectId(detail.projectId, for: taskId)
                     openSticky(projectId: detail.projectId, taskId: taskId)
                 }
             } catch {

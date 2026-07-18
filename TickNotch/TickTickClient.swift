@@ -76,6 +76,7 @@ struct TickTickClient {
         guard let url = URL(string: Self.taskBase + id) else { throw ClientError.badPayload }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.timeoutInterval = 8 // клик не должен висеть
         applyHeaders(&request)
 
         let (data, response) = try await Self.session.data(for: request)

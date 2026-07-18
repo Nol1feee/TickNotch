@@ -2,19 +2,25 @@ import AppKit
 import SwiftUI
 import Combine
 
+/// NSHostingView в non-activating панели: окно никогда не key, каждый клик — «первый».
+/// Без acceptsFirstMouse=true SwiftUI-жесты глотаются.
+final class FirstMouseHostingView<Content: View>: NSHostingView<Content> {
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+}
+
 /// Бар у выреза: вплотную к верхнему краю экрана, чёрный, сливается с чёлкой.
 /// Поверх всех приложений, включая fullscreen.
 @MainActor
 final class OverlayPanelController {
     private let panel: NSPanel
-    private let hosting: NSHostingView<OverlayView>
+    private let hosting: FirstMouseHostingView<OverlayView>
     private let monitor: FocusMonitor
     private var cancellables = Set<AnyCancellable>()
 
     init(monitor: FocusMonitor) {
         self.monitor = monitor
 
-        hosting = NSHostingView(rootView: OverlayView(monitor: monitor, layout: NotchLayout(
+        hosting = FirstMouseHostingView(rootView: OverlayView(monitor: monitor, layout: NotchLayout(
             hasNotch: false, notchWidth: 0, barHeight: 32, leftWidth: 160, rightWidth: 70
         )))
 

@@ -107,6 +107,32 @@ POST https://ms.ticktick.com/focus/batch/focusOp
 Выводы: даты — ISO `+0000`, `duration` записей — **миллисекунды**, привязка к задаче —
 массив `tasks[]` с `title`.
 
+## Deep-link в приложение TickTick (клик по бару)
+
+TickTick.app (`com.TickTick.task.mac`, native AppKit) регистрирует схемы
+`ticktick`, `dida`, `com.ticktick.task`. Роутер — библиотека Crossroad, маршруты
+строятся в рантайме (полных шаблонов в бинарнике нет). Проверено эмпирически:
+
+```
+open -g "ticktick://ticktick.com/p/{projectId}/tasks/{taskId}"
+```
+
+- открывает **родное окно задачи** (деталь в layout'е `popup`/`side_peek` по настройке
+  пользователя — строки `task_detail_layout_popup/side_peek`), плавающее **поверх всех окон,
+  включая fullscreen другого приложения** (проверено скриншотом над полноэкранным TextEdit);
+- `-g` / `NSWorkspace.OpenConfiguration.activates=false` — TickTick не выходит на передний план;
+- **нужен `projectId` в пути**: форма `.../tasks/{taskId}` без проекта только переключает доску,
+  окно не открывает. `projectId` берём из `GET /api/v2/task/{taskId}`.
+
+Прочие маршруты схемы (из строк бинарника): `/tasks/`, `/focus`, `/matrix`, `/create`.
+Отдельного `/sticky` маршрута нет — «Open as sticky note» это приватное UI-действие
+(`bottomActionViewDidClickOpenSticky:`), внешне не вызывается кроме как через Accessibility (хрупко).
+
+Бонус: TickTick.app **скриптуется** (`NSAppleScriptEnabled=true`, `TickTick.sdef` — команды
+`search tasks`, `today tasks`, `start pomo`, `toggle task`, всё возвращает JSON) — запасной путь
+для резолва задач без веб-API. И есть push-эндпоинт помидора `https://pull.ticktick.com/common/pomodoro/v2/`
+(long-poll) — кандидат на мгновенный синк вместо опроса.
+
 ## Прочие полезные эндпоинты (api.ticktick.com, из OSS)
 
 ```

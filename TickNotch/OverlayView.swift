@@ -64,9 +64,9 @@ private struct NotchBarView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture {
-            AppModel.shared.toggleTaskCard()
+            AppModel.shared.openFocusSticky()
         }
-        .help("Показать задачу")
+        .help("Открыть заметку задачи")
     }
 
     private var stateColor: Color {

@@ -7,92 +7,67 @@ import ServiceManagement
 final class AppModel: ObservableObject {
     static let shared = AppModel()
 
-    enum CardPhase: Equatable {
-        case hidden, loading, loaded, noTask
-        case error(String)
-    }
-
     let monitor = FocusMonitor()
 
-    @Published var cardPhase: CardPhase = .hidden
-    @Published var cardTask: TaskDetail?
     @Published private(set) var launchAtLogin: Bool = false
 
     private var panelController: OverlayPanelController?
-    private var cardController: TaskCardController?
     private var cookieWindowController: CookieWindowController?
-    private var cardFetch: Task<Void, Never>?
-    private var cancellables = Set<AnyCancellable>()
+    private var stickyTask: Task<Void, Never>?
+    /// taskId → projectId (deep-link стики требует projectId в пути).
+    private var projectIdCache: [String: String] = [:]
 
     private init() {}
 
     func bootstrap() {
         panelController = OverlayPanelController(monitor: monitor)
-        cardController = TaskCardController(model: self)
         refreshLaunchAtLogin()
         monitor.start()
-
-        // Сессия пропала — прячем карточку.
-        monitor.$session
-            .receive(on: RunLoop.main)
-            .sink { [weak self] session in
-                if session == nil { self?.hideTaskCard() }
-            }
-            .store(in: &cancellables)
-
         if KeychainStore.load() == nil {
             showCookieWindow()
         }
     }
 
-    // MARK: - Карточка задачи
+    // MARK: - Родная стики-заметка задачи
 
-    func toggleTaskCard() {
-        if cardPhase == .hidden {
-            presentTaskCard()
-        } else {
-            hideTaskCard()
-        }
-    }
-
-    private func presentTaskCard() {
-        guard let session = monitor.session else { return }
-        guard let taskId = session.taskId, !taskId.isEmpty else {
-            cardTask = nil
-            cardPhase = .noTask
-            cardController?.show()
+    /// Клик по бару: открыть встроенную стики-заметку TickTick для задачи фокуса,
+    /// плавающую поверх окон, БЕЗ вывода приложения на передний план.
+    func openFocusSticky() {
+        guard let session = monitor.session,
+              let taskId = session.taskId, !taskId.isEmpty else {
+            openTickTick() // фокус без привязанной задачи
             return
         }
-        cardTask = nil
-        cardPhase = .loading
-        cardController?.show()
-
-        cardFetch?.cancel()
-        cardFetch = Task { [weak self] in
-            guard let self else { return }
-            guard let cookie = KeychainStore.load() else {
-                cardPhase = .error("нет cookie")
-                cardController?.relayout()
+        if let projectId = projectIdCache[taskId] {
+            openSticky(projectId: projectId, taskId: taskId)
+            return
+        }
+        stickyTask?.cancel()
+        stickyTask = Task { [weak self] in
+            guard let self, let cookie = KeychainStore.load() else {
+                self?.openTickTick()
                 return
             }
             do {
                 let detail = try await TickTickClient(cookie: cookie).fetchTask(id: taskId)
                 guard !Task.isCancelled else { return }
-                cardTask = detail
-                cardPhase = .loaded
-            } catch TickTickClient.ClientError.unauthorized {
-                cardPhase = .error("cookie недействителен (401)")
+                if detail.projectId.isEmpty {
+                    openTickTick()
+                } else {
+                    projectIdCache[taskId] = detail.projectId
+                    openSticky(projectId: detail.projectId, taskId: taskId)
+                }
             } catch {
-                cardPhase = .error("не удалось загрузить задачу")
+                openTickTick()
             }
-            cardController?.relayout()
         }
     }
 
-    func hideTaskCard() {
-        cardFetch?.cancel()
-        cardPhase = .hidden
-        cardController?.hide()
+    private func openSticky(projectId: String, taskId: String) {
+        guard let url = URL(string: "ticktick://ticktick.com/p/\(projectId)/tasks/\(taskId)") else { return }
+        let config = NSWorkspace.OpenConfiguration()
+        config.activates = false // как `open -g`: не выводить TickTick на передний план
+        NSWorkspace.shared.open(url, configuration: config, completionHandler: nil)
     }
 
     // MARK: - Автозапуск при входе (macOS 13+)

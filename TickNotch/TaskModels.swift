@@ -9,6 +9,7 @@ struct TaskDetail: Equatable, Identifiable {
     }
 
     let id: String
+    let projectId: String
     let title: String
     /// Заметка задачи: `content` (тип TEXT) или `desc` (тип CHECKLIST).
     let note: String
@@ -21,6 +22,7 @@ struct TaskDetail: Equatable, Identifiable {
 
     init(_ dict: [String: Any]) {
         id = dict["id"] as? String ?? ""
+        projectId = dict["projectId"] as? String ?? ""
         title = (dict["title"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         let content = (dict["content"] as? String) ?? ""

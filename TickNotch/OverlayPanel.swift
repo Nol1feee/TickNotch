@@ -2,29 +2,14 @@ import AppKit
 import SwiftUI
 import Combine
 
-/// Прозрачный AppKit-ловец клика ПОВЕРХ SwiftUI-бара.
-/// Окно панели non-activating (никогда не key), поэтому клик по нему — всегда «первый»,
-/// а SwiftUI onTapGesture его теряет (первый клик активирует окно, а не доходит до вью).
-/// Этот NSView сам — верхний hit-target: acceptsFirstMouse=true + прямой mouseDown.
-final class ClickCatcherView: NSView {
-    var onClick: () -> Void = {}
-    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
-    override func mouseDown(with event: NSEvent) { onClick() }
-    override func hitTest(_ point: NSPoint) -> NSView? { self } // забираем все клики
-}
-
 /// Бар у выреза: вплотную к верхнему краю экрана, чёрный, сливается с чёлкой.
-/// Поверх всех приложений, включая fullscreen.
+/// Чистый таймер. Поверх всех приложений, на всех рабочих столах/пространствах и над fullscreen.
 @MainActor
 final class OverlayPanelController {
     private let panel: NSPanel
     private let hosting: NSHostingView<OverlayView>
-    private let clickCatcher = ClickCatcherView()
     private let monitor: FocusMonitor
     private var cancellables = Set<AnyCancellable>()
-    /// Текущий экранный прямоугольник бара — для монитора мыши.
-    private var barFrame: NSRect = .zero
-    private var mouseMonitors: [Any] = []
 
     init(monitor: FocusMonitor) {
         self.monitor = monitor
@@ -48,25 +33,8 @@ final class OverlayPanelController {
         panel.hidesOnDeactivate = false
         panel.isReleasedWhenClosed = false
         panel.becomesKeyOnlyIfNeeded = true
-
-        let container = NSView()
-        hosting.translatesAutoresizingMaskIntoConstraints = false
-        clickCatcher.translatesAutoresizingMaskIntoConstraints = false
-        clickCatcher.onClick = { AppModel.shared.openFocusTask() }
-        clickCatcher.toolTip = "Открыть задачу в TickTick"
-        container.addSubview(hosting)
-        container.addSubview(clickCatcher) // поверх бара
-        NSLayoutConstraint.activate([
-            hosting.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            hosting.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            hosting.topAnchor.constraint(equalTo: container.topAnchor),
-            hosting.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-            clickCatcher.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            clickCatcher.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            clickCatcher.topAnchor.constraint(equalTo: container.topAnchor),
-            clickCatcher.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        panel.contentView = container
+        panel.ignoresMouseEvents = true // чистый таймер, кликов не ловим
+        panel.contentView = hosting
 
         Publishers.CombineLatest(monitor.$session, monitor.$overlayEnabled)
             .receive(on: RunLoop.main)
@@ -82,30 +50,6 @@ final class OverlayPanelController {
         ) { _ in
             Task { @MainActor in self.reposition() }
         }
-
-        installMouseMonitors()
-    }
-
-    /// Строка меню/вырез могут перехватывать клики в верхней полосе, и окно их не получает.
-    /// Поэтому ловим клик по координатам бара напрямую (для мыши accessibility не нужен):
-    /// global — клики, ушедшие другим приложениям/меню; local — наши собственные.
-    private func installMouseMonitors() {
-        let handle: (NSPoint) -> Void = { [weak self] loc in
-            Task { @MainActor in self?.handleClick(at: loc) }
-        }
-        if let global = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown]) { _ in
-            handle(NSEvent.mouseLocation)
-        } { mouseMonitors.append(global) }
-        if let local = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown]) { event in
-            handle(NSEvent.mouseLocation)
-            return event
-        } { mouseMonitors.append(local) }
-    }
-
-    private func handleClick(at location: NSPoint) {
-        guard monitor.session != nil, monitor.overlayEnabled,
-              barFrame.contains(location) else { return }
-        AppModel.shared.openFocusTask()
     }
 
     private func refresh(session: FocusSession?, enabled: Bool) {
@@ -114,7 +58,6 @@ final class OverlayPanelController {
             return
         }
         reposition(session: session)
-        barFrame = panel.frame
         panel.orderFrontRegardless()
     }
 

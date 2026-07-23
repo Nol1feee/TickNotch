@@ -70,23 +70,6 @@ struct TickTickClient {
         )
     }
 
-    /// projectId задачи — нужен для веб-URL `#p/{projectId}/tasks/{taskId}`.
-    func fetchProjectId(taskId: String) async throws -> String {
-        guard let url = URL(string: "https://api.ticktick.com/api/v2/task/\(taskId)") else { throw ClientError.badPayload }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 8
-        applyHeaders(&request)
-        let (data, response) = try await Self.session.data(for: request)
-        guard let http = response as? HTTPURLResponse else { throw ClientError.badPayload }
-        if http.statusCode == 401 || http.statusCode == 403 { throw ClientError.unauthorized }
-        guard (200..<300).contains(http.statusCode),
-              let dict = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
-              let pid = dict["projectId"] as? String, !pid.isEmpty
-        else { throw ClientError.badPayload }
-        return pid
-    }
-
     private func applyHeaders(_ request: inout URLRequest) {
         let normalized = Self.normalizeCookie(cookie)
         request.setValue("application/json;charset=UTF-8", forHTTPHeaderField: "Content-Type")

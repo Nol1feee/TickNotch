@@ -23,7 +23,7 @@ final class FocusMonitor: ObservableObject {
 
     private static let overlayKey = "TickNotchOverlayEnabled"
     private static let pointKey = "TickNotchLastPoint"
-    private let baseInterval: TimeInterval = 3
+    private let baseInterval: TimeInterval = 2
     private var loopTask: Task<Void, Never>?
     private var consecutiveFailures = 0
     private var lastPoint = UserDefaults.standard.integer(forKey: FocusMonitor.pointKey)

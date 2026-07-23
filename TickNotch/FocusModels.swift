@@ -51,10 +51,9 @@ enum FocusParser {
         let status = intValue(cur["status"])
         let kind: FocusSession.Kind = intValue(cur["type"]) == 1 ? .stopwatch : .pomo
         let segments = segments(from: cur)
-        let title = segments.reversed()
+        let title = cleanTitle(segments.reversed()
             .compactMap { $0.title }
-            .first { !$0.isEmpty }
-            ?? "Фокус"
+            .first { !$0.isEmpty })
         let taskId = segments.reversed()
             .compactMap { $0.id }
             .first { !$0.isEmpty }
@@ -191,6 +190,26 @@ enum FocusParser {
     }
 
     // MARK: - Хелперы типов
+
+    /// Чистим заголовок для бара: первая строка, markdown-ссылки [text](url) → text, обрезка.
+    static func cleanTitle(_ raw: String?) -> String {
+        guard var s = raw?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty else { return "Фокус" }
+        s = s.components(separatedBy: .newlines).first ?? s
+        // [текст](url) -> текст
+        while let open = s.range(of: "]("), let lb = s.range(of: "[", range: s.startIndex..<open.lowerBound) {
+            if let close = s.range(of: ")", range: open.upperBound..<s.endIndex) {
+                let text = String(s[lb.upperBound..<open.lowerBound])
+                s.replaceSubrange(lb.lowerBound..<close.upperBound, with: text)
+            } else { break }
+        }
+        // Остатки сырых ссылок/markdown — режем всё от них.
+        for marker in ["http://", "https://", "](", " | [", "["] {
+            if let r = s.range(of: marker) { s = String(s[s.startIndex..<r.lowerBound]) }
+        }
+        s = s.trimmingCharacters(in: CharacterSet(charactersIn: " |—-•").union(.whitespaces))
+        if s.count > 60 { s = String(s.prefix(60)).trimmingCharacters(in: .whitespaces) + "…" }
+        return s.isEmpty ? "Фокус" : s
+    }
 
     static func intValue(_ any: Any?) -> Int? {
         switch any {

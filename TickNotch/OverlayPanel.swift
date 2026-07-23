@@ -22,6 +22,9 @@ final class OverlayPanelController {
     private let clickCatcher = ClickCatcherView()
     private let monitor: FocusMonitor
     private var cancellables = Set<AnyCancellable>()
+    /// Текущий экранный прямоугольник бара — для монитора мыши.
+    private var barFrame: NSRect = .zero
+    private var mouseMonitors: [Any] = []
 
     init(monitor: FocusMonitor) {
         self.monitor = monitor
@@ -79,6 +82,30 @@ final class OverlayPanelController {
         ) { _ in
             Task { @MainActor in self.reposition() }
         }
+
+        installMouseMonitors()
+    }
+
+    /// Строка меню/вырез могут перехватывать клики в верхней полосе, и окно их не получает.
+    /// Поэтому ловим клик по координатам бара напрямую (для мыши accessibility не нужен):
+    /// global — клики, ушедшие другим приложениям/меню; local — наши собственные.
+    private func installMouseMonitors() {
+        let handle: (NSPoint) -> Void = { [weak self] loc in
+            Task { @MainActor in self?.handleClick(at: loc) }
+        }
+        if let global = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown]) { _ in
+            handle(NSEvent.mouseLocation)
+        } { mouseMonitors.append(global) }
+        if let local = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown]) { event in
+            handle(NSEvent.mouseLocation)
+            return event
+        } { mouseMonitors.append(local) }
+    }
+
+    private func handleClick(at location: NSPoint) {
+        guard monitor.session != nil, monitor.overlayEnabled,
+              barFrame.contains(location) else { return }
+        AppModel.shared.openFocusTask()
     }
 
     private func refresh(session: FocusSession?, enabled: Bool) {
@@ -87,6 +114,7 @@ final class OverlayPanelController {
             return
         }
         reposition(session: session)
+        barFrame = panel.frame
         panel.orderFrontRegardless()
     }
 

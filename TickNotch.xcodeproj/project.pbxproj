@@ -16,6 +16,7 @@
 		AA000000000000000000BF07 /* OverlayPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE07 /* OverlayPanel.swift */; };
 		AA000000000000000000BF08 /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE08 /* OverlayView.swift */; };
 		AA000000000000000000BF09 /* CookieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE09 /* CookieView.swift */; };
+		AA000000000000000000BF10 /* TaskWebWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000FE10 /* TaskWebWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		AA000000000000000000FE07 /* OverlayPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayPanel.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE08 /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE09 /* CookieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CookieView.swift; sourceTree = "<group>"; };
+		AA000000000000000000FE10 /* TaskWebWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskWebWindow.swift; sourceTree = "<group>"; };
 		AA000000000000000000FE0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA000000000000000000FE0C /* TickNotch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TickNotch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -63,6 +65,7 @@
 				AA000000000000000000FE07 /* OverlayPanel.swift */,
 				AA000000000000000000FE08 /* OverlayView.swift */,
 				AA000000000000000000FE09 /* CookieView.swift */,
+				AA000000000000000000FE10 /* TaskWebWindow.swift */,
 				AA000000000000000000FE0A /* Info.plist */,
 			);
 			path = TickNotch;
@@ -153,6 +156,7 @@
 				AA000000000000000000BF07 /* OverlayPanel.swift in Sources */,
 				AA000000000000000000BF08 /* OverlayView.swift in Sources */,
 				AA000000000000000000BF09 /* CookieView.swift in Sources */,
+				AA000000000000000000BF10 /* TaskWebWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

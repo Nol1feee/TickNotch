@@ -125,17 +125,18 @@ enum FocusParser {
             )
         }
 
-        // Помидор: серверный endTime — прогноз конца с учётом пауз; протухший пересчитываем от плана
+        // Помидор: серверный endTime — ИСТОЧНИК ПРАВДЫ (учитывает реальную длину и паузы,
+        // ровно как показывает сам TickTick). НЕ зажимаем к `duration` — поле ненадёжно
+        // (бывает end-start=90мин при duration=60), кламп только сбрасывал отсчёт.
         let serverEnd = date(cur["endTime"])
         if let serverEnd, now.timeIntervalSince(serverEnd) > 300 {
             return nil // сервер давно считает сессию законченной, а статус не обновился
         }
-        var end = serverEnd
-        if end == nil || end! <= now {
-            end = now.addingTimeInterval(max(0, plannedSeconds - focusedNow))
-        }
-        if plannedSeconds > 0, let e = end, e.timeIntervalSince(now) > plannedSeconds {
-            end = now.addingTimeInterval(plannedSeconds) // защита от мусорных значений
+        let end: Date
+        if let serverEnd, serverEnd > now {
+            end = serverEnd
+        } else {
+            end = now.addingTimeInterval(max(0, plannedSeconds - focusedNow)) // fallback: endTime нет/протух
         }
         return FocusSession(
             title: title, taskId: taskId, phase: .focus, kind: .pomo,

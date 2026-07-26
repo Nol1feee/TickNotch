@@ -18,7 +18,7 @@
 
 ## Скачать
 
-**[TickNotch-1.0.dmg → релизы](https://github.com/Nol1feee/TickNotch/releases/latest)** — открой DMG, перетащи в Applications.
+**[Скачать DMG → релизы](https://github.com/Nol1feee/TickNotch/releases/latest)** — открой DMG, перетащи в Applications.
 
 Приложение без подписи Apple. При первом запуске: правый клик по `TickNotch.app` → «Открыть».
 Если ругается «повреждено» — сними карантин:

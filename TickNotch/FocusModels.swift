@@ -125,19 +125,22 @@ enum FocusParser {
             )
         }
 
-        // Помидор: серверный endTime — ИСТОЧНИК ПРАВДЫ (учитывает реальную длину и паузы,
-        // ровно как показывает сам TickTick). НЕ зажимаем к `duration` — поле ненадёжно
-        // (бывает end-start=90мин при duration=60), кламп только сбрасывал отсчёт.
-        let serverEnd = date(cur["endTime"])
-        if let serverEnd, now.timeIntervalSince(serverEnd) > 300 {
-            return nil // сервер давно считает сессию законченной, а статус не обновился
-        }
+        // Помидор: конец = startTime + duration(минуты) [+ время пауз].
+        // Проверено против самого TickTick: показывает 53:14 == start+duration-now.
+        // Серверный `endTime` НЕ конец помидора (бывает start+90мин при duration=60) — не использовать.
+        let pomoStart = date(cur["startTime"]) ?? segments.first?.start ?? now
+        let pauseRaw = doubleValue(cur["pauseDuration"]) ?? 0
+        let pauseExtra = pauseRaw >= 100_000 ? pauseRaw / 1000 : pauseRaw // ms или сек
         let end: Date
-        if let serverEnd, serverEnd > now {
-            end = serverEnd
+        if plannedSeconds > 0 {
+            end = pomoStart.addingTimeInterval(plannedSeconds + pauseExtra)
+        } else if let serverEnd = date(cur["endTime"]), serverEnd > now {
+            end = serverEnd // fallback, если duration почему-то пуст
         } else {
-            end = now.addingTimeInterval(max(0, plannedSeconds - focusedNow)) // fallback: endTime нет/протух
+            end = now.addingTimeInterval(max(0, -focusedNow)) // совсем нет данных — 0
         }
+        // Помидор давно должен был кончиться, а статус не обновился — не показываем.
+        if now.timeIntervalSince(end) > 120 { return nil }
         return FocusSession(
             title: title, taskId: taskId, phase: .focus, kind: .pomo,
             endDate: end, frozenRemaining: nil,

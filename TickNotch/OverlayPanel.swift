@@ -24,7 +24,8 @@ final class OverlayPanelController {
             backing: .buffered,
             defer: false
         )
-        panel.level = .statusBar
+        // .screenSaver — выше слоя полноэкранных приложений (иначе fullscreen окно перекрывает бар).
+        panel.level = .screenSaver
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary]
         panel.isOpaque = false
         panel.backgroundColor = .clear
